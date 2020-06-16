@@ -1,2 +1,2 @@
-# time_maneger
-独自時間管理
+# 時間管理アプリ
+Reactの呼吸　２の型 TypeScript
