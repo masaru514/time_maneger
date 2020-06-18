@@ -1,49 +1,76 @@
-import React,{ useState } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { StyleSheet, Text, View,ScrollView,Image,Button, Alert } from 'react-native';
 
 //propsのオブジェクト引数の型決める? = interface
 interface ButtonName {
   name: string;
-  time: string;
+  clear: string;
+  time: number;
+  isCheck: boolean;
 }
 
 //Buttonコンポーネント
 function TimeButton(props: ButtonName) {
-  //状態
-  const [time ,setTime] = useState(0);
-  const plusTime = function() {
-    setTime(time + 1)
+  //0秒の時間とONOFF
+  const [initSec, setInitSec] = useState(0);
+  const [initMin, setInitMin] = useState(0);
+  const [startTimer,setStartTimer] = useState(false)
+
+  //Startメソッド
+  const start = () => {
+    setInitSec(0)
+    setInitMin(0)
+    setStartTimer(true)
   }
 
-  //ループ処理させたい
-  function Timer() {
-      setInterval(plusTime, 1000)
-      console.log("a")
-    
+  //Resetメソッド
+  const reset = () => {
+    setInitSec(0)
+    setInitMin(0)
+    setStartTimer(false)
+    console.log("削除！")
   }
 
-  //Buttonが押すと、数字が変わる
+  useEffect(() => {
+    if(initSec < 31 && startTimer) {
+      setTimeout(() => {
+        setInitSec(initSec + 1);
+        console.log("start Time,", initSec)
+      }, 100);
+
+      if(initSec == 30){
+        setInitSec(0)
+        setInitMin(initMin + 1)
+      }
+      
+      //2分になったら停止
+      //falseが1秒目にならないと伝わらない?
+      if(initMin === 1 && initSec == 30) {
+        console.log("End");
+        setInitSec(0)
+        setStartTimer(false);
+      }
+    }
+
+  }, [initSec, initMin, startTimer]);
+
   return(
     <View>
-      <Text>{time}</Text>
-      <Button onPress={() => Timer} title={props.name} />
+      <Text>Count: {initMin}:{initSec}</Text>
+      <Button onPress={() => start()} title={props.name} />
+      <Button onPress={() => reset()} title={props.clear}/>
     </View>
   );
 }
+
+
 export default function App(props: any) {
   return(
       <View style={styles.container}>
-        <TimeButton name="ボタンです"/>
-        <ActiveButton />
+        <TimeButton name="再生" clear="初期化"/>
       </View>
     );
 }  
-function ActiveButton(){
-  let obj = {name: 'tuyoi'}
-  return(
-    <Button onPress={() => Alert.alert(obj.name)} title='インターフェース確認' />
-  )
-}
 
 
 const styles = StyleSheet.create({
