@@ -1,5 +1,8 @@
 import React,{ useState, useEffect } from 'react';
 import { StyleSheet, Text, View,ScrollView,Image,Button, Alert } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 //propsのオブジェクト引数の型決める? = interface
 interface ButtonName {
@@ -55,21 +58,45 @@ function TimeButton(props: ButtonName) {
   }, [initSec, initMin, startTimer]);
 
   return(
-    <View>
+    <>
       <Text>Count: {initMin}:{initSec}</Text>
-      <Button onPress={() => start()} title={props.name} />
-      <Button onPress={() => reset()} title={props.clear}/>
+      <View>
+        <Button onPress={() => start()} title={props.name} />
+        <Button onPress={() => reset()} title={props.clear}/>
+      </View>
+    </>
+  );
+}
+
+function HomeScreen({ navigation }){
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>タイマー</Text>
+      <TimeButton name="再生" clear="初期化"/>
     </View>
   );
 }
 
+function DetailsScreen({ route, navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}
+const Tab = createBottomTabNavigator();
+
 
 export default function App(props: any) {
   return(
-      <View style={styles.container}>
-        <TimeButton name="再生" clear="初期化"/>
-      </View>
-    );
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="ホーム" component={HomeScreen} />
+        <Tab.Screen name="実績" component={DetailsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
 }  
 
 
