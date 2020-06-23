@@ -1,9 +1,7 @@
 
 import React,{ useState, useEffect } from 'react';
 import { StyleSheet, Text, View,ScrollView,Image,Button, Alert } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 
 interface ButtonName {
   name: string;
@@ -31,12 +29,13 @@ export default function ButtonComp(props: ButtonName) {
     setStartTimer(true)
   }
 
-  //Resetメソッド
+  //pauseメソッド
   const pause = () => {
     clearTimeout(settings)
     setStartTimer(false)
   }
 
+  //resetメソッド
   const reset = () => {
     clearTimeout(settings)
     setInitTime({second: 0, min: 0, hour: 0})
@@ -59,7 +58,6 @@ export default function ButtonComp(props: ButtonName) {
       "m": minutes,
       "s": seconds
     };
-    console.log(secs)
     return obj;
   }
 
@@ -86,8 +84,8 @@ export default function ButtonComp(props: ButtonName) {
 
   return(
     <>
-      <Text>{initTime.hour}:{initTime.min}:{initTime.second}</Text>
-      <View>
+      <Text style={styles.displaysize}>{initTime.hour}:{initTime.min}:{initTime.second}</Text>
+      <View style={styles.flexToText}>
         <Button onPress={() => start()} title={props.startBtn} />
         <Button onPress={() => pause()} title={props.pauseBtn}/>
         <Button onPress={() => reset()} title={props.resetBtn} />
@@ -95,3 +93,17 @@ export default function ButtonComp(props: ButtonName) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  displaysize: {
+    fontSize: 70
+  },
+  flexToText: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 300
+  },
+  buttonSize: {
+    width: 50
+  }
+})
